@@ -1,12 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import './index.scss';
+import useLocalStorageList from './CustomHook/useLocalStorageList';
 
 function TodoListLocalStoragePage() {
     const [todo, setTodo] = useState('');
-    const [listTodo, setListTodo] = useState(() => {
-        const listStringIfy = localStorage.getItem('todoList');
-        return listStringIfy ? JSON.parse(listStringIfy) : [];
-    });
+    const [listTodo, setListTodo] = useLocalStorageList();
     const handleClickAD = () => {
         if (sumChecked === 0) {
             if (todo.trim() === '') return;
@@ -38,9 +36,6 @@ function TodoListLocalStoragePage() {
     };
     const sumChecked = useMemo(() => {
         return listTodo.reduce((acc, cur) => (acc + cur.isChecked ? 1 : 0), 0);
-    }, [listTodo]);
-    useEffect(() => {
-        localStorage.setItem('todoList', JSON.stringify(listTodo));
     }, [listTodo]);
     return (
         <div className="container-todo">

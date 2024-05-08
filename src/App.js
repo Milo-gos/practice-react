@@ -1,10 +1,24 @@
 import './App.css';
-import TimerPage from './pages/Timer';
-import ContactBookPage from './pages/ContactBook';
-import TodoListLocalStoragePage from './pages/TodoListLocalStorage';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import routes from './routes';
 
 function App() {
-    return <TodoListLocalStoragePage />;
+    return (
+        <Router>
+            <Routes>
+                {routes.map((route, index) => {
+                    const Page = route.component;
+                    return (
+                        <Route
+                            key={index}
+                            path={route.path}
+                            element={<Page />}
+                        ></Route>
+                    );
+                })}
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;
