@@ -1,0 +1,19 @@
+html {
+    font-size: 20px;
+}
+.shopping-container {
+    padding: 12px;
+    padding-top: 32px;
+    ul {
+        max-width: 200px;
+        margin-top: 30px;
+    }
+
+    li {
+        text-align: left;
+    }
+
+    button {
+        margin-left: 10px;
+    }
+}

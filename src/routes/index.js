@@ -1,5 +1,6 @@
 import ContactBookPage from '../pages/ContactBook';
 import MovieSearchPage from '../pages/MovieSearch';
+import ShoppingListPage from '../pages/ShoppingList';
 import TimerPage from '../pages/Timer';
 import TodoListLocalStoragePage from '../pages/TodoListLocalStorage';
 
@@ -9,7 +10,7 @@ const routes = [
         component: TodoListLocalStoragePage,
     },
     {
-        path: '/todo',
+        path: '/todo-list',
         component: TodoListLocalStoragePage,
     },
     {
@@ -23,6 +24,10 @@ const routes = [
     {
         path: '/movie-search',
         component: MovieSearchPage,
+    },
+    {
+        path: '/shopping-list',
+        component: ShoppingListPage,
     },
 ];
 

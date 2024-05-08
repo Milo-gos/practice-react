@@ -1,6 +1,7 @@
-import './App.css';
+import './App.scss';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import routes from './routes';
+import MainLayout from './layouts/MainLayout';
 
 function App() {
     return (
@@ -12,7 +13,11 @@ function App() {
                         <Route
                             key={index}
                             path={route.path}
-                            element={<Page />}
+                            element={
+                                <MainLayout>
+                                    <Page />
+                                </MainLayout>
+                            }
                         ></Route>
                     );
                 })}

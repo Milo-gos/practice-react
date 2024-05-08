@@ -1,0 +1,15 @@
+.main-layout {
+    position: relative;
+
+    .menu {
+        position: absolute;
+        display: block;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        select {
+            padding: 8px 16px;
+            font-size: 16px;
+        }
+    }
+}
