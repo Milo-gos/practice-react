@@ -13,6 +13,9 @@ function MainLayout({ children }) {
                     <option value="/shopping-list">
                         Shopping List LocalStorage
                     </option>
+                    <option value="/shopping-cart">
+                        Shopping Cart React Query
+                    </option>
                 </select>
             </div>
             {children}
