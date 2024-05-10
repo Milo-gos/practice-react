@@ -1,12 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import fetchProducts from './mock-api/product';
 import './index.scss';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { z } from 'zod';
 import useStoreUser from '../../store/store-user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+
+const isVietnamesePhoneNumber = (number) => {
+    return /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/.test(number);
+};
 const schema = z.object({
+    name: z.string().nonempty('This is a required field'),
+    age: z.coerce
+        .number({
+            message: 'Age must be a number',
+        })
+        .min(1),
     email: z
         .string()
         .nonempty('This is a required field')
@@ -14,12 +24,20 @@ const schema = z.object({
     phoneNumber: z
         .string()
         .nonempty('This is a required field')
-        .min(10, { message: 'Must be a valid mobile number' })
-        .max(14, { message: 'Must be a valid mobile number' }),
+        .refine((number) => isVietnamesePhoneNumber(number), {
+            message: 'This is not Vietnamese phone number',
+        }),
 });
 function ShoppingCartPage() {
-    const { user, addToCart, deleteCart, decreaseCart, increaseCart } =
-        useStoreUser();
+    const {
+        user,
+        addToCart,
+        deleteCart,
+        decreaseCart,
+        increaseCart,
+        updateInfoUser,
+        resetUser,
+    } = useStoreUser();
     const { isLoading, data } = useQuery({
         queryKey: ['products'],
         queryFn: fetchProducts,
@@ -54,14 +72,27 @@ function ShoppingCartPage() {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm({
         resolver: zodResolver(schema),
         mode: 'onSubmit',
         shouldFocusError: true,
     });
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = (userInfo) => {
+        updateInfoUser({
+            ...userInfo,
+            price: Math.round(totalPrice * 100) / 100,
+        });
+    };
+    const handleClickReset = () => {
+        resetUser();
+        reset((formValues) => {
+            Object.keys(formValues).forEach((key) => {
+                formValues[key] = '';
+            });
+            return formValues;
+        });
     };
     return (
         <div className="container-shopping-cart">
@@ -170,11 +201,43 @@ function ShoppingCartPage() {
                     }}
                 >
                     <input
-                        {...register('email')}
-                        placeholder="email"
+                        {...register('name')}
+                        placeholder="name"
                         style={{ padding: '4px 8px', fontSize: '16px' }}
                     />
-                    {errors.email && <p>{errors.email.message}</p>}
+                    {errors.name && (
+                        <p style={{ color: 'red', marginTop: '4px' }}>
+                            {errors.name.message}
+                        </p>
+                    )}
+                    <input
+                        {...register('age')}
+                        placeholder="age"
+                        style={{
+                            padding: '4px 8px',
+                            fontSize: '16px',
+                            marginTop: '16px',
+                        }}
+                    />
+                    {errors.age && (
+                        <p style={{ color: 'red', marginTop: '4px' }}>
+                            {errors.age.message}
+                        </p>
+                    )}
+                    <input
+                        {...register('email')}
+                        placeholder="email"
+                        style={{
+                            padding: '4px 8px',
+                            fontSize: '16px',
+                            marginTop: '16px',
+                        }}
+                    />
+                    {errors.email && (
+                        <p style={{ color: 'red', marginTop: '4px' }}>
+                            {errors.email.message}
+                        </p>
+                    )}
 
                     <input
                         {...register('phoneNumber')}
@@ -185,7 +248,11 @@ function ShoppingCartPage() {
                             marginTop: '16px',
                         }}
                     />
-                    {errors.phoneNumber && <p>{errors.phoneNumber.message} </p>}
+                    {errors.phoneNumber && (
+                        <p style={{ color: 'red', marginTop: '4px' }}>
+                            {errors.phoneNumber.message}{' '}
+                        </p>
+                    )}
 
                     <input
                         type="submit"
@@ -196,6 +263,19 @@ function ShoppingCartPage() {
                         }}
                     />
                 </form>
+
+                <div style={{ textAlign: 'center' }}>
+                    <button
+                        onClick={handleClickReset}
+                        style={{
+                            padding: '4px 8px',
+                            fontSize: '16px',
+                            marginTop: '16px',
+                        }}
+                    >
+                        Reset All
+                    </button>
+                </div>
             </div>
         </div>
     );

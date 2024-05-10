@@ -6,6 +6,7 @@ const initState = {
         email: '',
         phoneNumber: '',
         carts: [],
+        price: 0,
     },
 };
 const useStoreUser = create((set) => ({
@@ -13,7 +14,6 @@ const useStoreUser = create((set) => ({
     addToCart: (cart) => {
         set((state) => {
             return {
-                ...state,
                 user: {
                     ...state.user,
                     carts: [...state.user.carts, cart],
@@ -24,7 +24,6 @@ const useStoreUser = create((set) => ({
     deleteCart: (productId) => {
         set((state) => {
             return {
-                ...state,
                 user: {
                     ...state.user,
                     carts: [...state.user.carts].filter(
@@ -38,7 +37,6 @@ const useStoreUser = create((set) => ({
     decreaseCart: (productId) => {
         set((state) => {
             return {
-                ...state,
                 user: {
                     ...state.user,
                     carts: [...state.user.carts].map((cart) => {
@@ -58,7 +56,6 @@ const useStoreUser = create((set) => ({
     increaseCart: (productId) => {
         set((state) => {
             return {
-                ...state,
                 user: {
                     ...state.user,
                     carts: [...state.user.carts].map((cart) => {
@@ -70,6 +67,31 @@ const useStoreUser = create((set) => ({
                     }),
                 },
             };
+        });
+    },
+    updateInfoUser: (user) => {
+        let newState;
+        set((state) => {
+            newState = {
+                user: {
+                    ...state.user,
+                    ...user,
+                },
+            };
+            return newState;
+        });
+        alert(`${newState.user.name} Add to card successfully!`);
+    },
+    resetUser: () => {
+        set({
+            user: {
+                name: '',
+                age: '',
+                email: '',
+                phoneNumber: '',
+                carts: [],
+                price: 0,
+            },
         });
     },
 }));
